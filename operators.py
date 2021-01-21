@@ -27,6 +27,8 @@ class MH2UE_OT_Import(bpy.types.Operator):
         if props.bool4:
             bpy.ops.mh_community.import_body()
         if props.bool5:
+            bpy.context.view_layer.objects.active\
+                = bpy.data.objects["human.HighPolyEyes"]
             bpy.ops.mh_community.separate_eyes()
         if props.bool6:
             bpy.data.objects["human"].name = "Armature"

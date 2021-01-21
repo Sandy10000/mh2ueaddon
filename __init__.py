@@ -12,7 +12,7 @@ from .translation import jajp
 bl_info = {
     "name": "mh2ue add-on",
     "author": "Sandy",
-    "version": (2021, 1, 18),
+    "version": (2021, 1, 21),
     "blender": (2, 90, 0),
     "location": "View3D > Sidebar",
     "description":
