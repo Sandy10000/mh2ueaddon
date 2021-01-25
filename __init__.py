@@ -12,7 +12,7 @@ from .translation import jajp
 bl_info = {
     "name": "mh2ue add-on",
     "author": "Sandy",
-    "version": (2021, 1, 21),
+    "version": (2021, 1, 25),
     "blender": (2, 90, 0),
     "location": "View3D > Sidebar",
     "description":
@@ -42,10 +42,12 @@ class MH2UE_PT_Panel(bpy.types.Panel):
 
 classes = [
     operators.MH2UE_OT_Import,
+    operators.MH2UE_OT_Bone,
     operators.MH2UE_OT_UEeye,
     operators.MH2UE_OT_Export,
     MH2UE_PT_Panel,
     panels.MH2UE_PT_Import,
+    panels.MH2UE_PT_Bone,
     panels.MH2UE_PT_UEeye,
     panels.MH2UE_PT_Export,
     properties.MH2UE_Property,
