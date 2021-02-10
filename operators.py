@@ -8,6 +8,19 @@ from . import mh2ueaddon
 from . import fbx
 
 
+def movetocollections(object_type, collection):
+    collections = bpy.data.collections
+    for o in bpy.data.objects:
+        if o.name in collections[collection].objects:
+            pass
+        elif o.type == object_type:
+            collections[collection].objects.link(o)
+            for c in o.users_collection:
+                if c.name != collection:
+                    c.objects.unlink(o)
+    bpy.ops.object.select_all(action='DESELECT')
+
+
 class MH2UE_OT_Import(bpy.types.Operator):
     bl_idname = "mh2ue.import"
     bl_label = "mh2ue.import"
@@ -17,9 +30,11 @@ class MH2UE_OT_Import(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
         props = scene.mh2ue_prop
+        collections = bpy.data.collections
         if props.import_b1:
             bpy.ops.object.select_all(action='SELECT')
             bpy.ops.object.delete()
+            MH2UE_OT_Import._removecollection(self, "human")
         if props.import_b2:
             scene.unit_settings.scale_length = 0.01
         if props.import_b3:
@@ -34,12 +49,27 @@ class MH2UE_OT_Import(bpy.types.Operator):
             bpy.data.objects["human"].name = "Armature"
         if props.import_b7:
             mh2ueaddon.mh2ue()
+        MH2UE_OT_Import._createcollection(self, props.import_s1)
+        MH2UE_OT_Import._createcollection(self, props.import_s2)
+        movetocollections("ARMATURE", props.import_s1)
+        movetocollections("MESH", props.import_s2)
         bpy.context.scene.cursor.location = (0, 0, 0)
         bpy.ops.object.select_all(action='DESELECT')
         bpy.context.view_layer.objects.active = bpy.data.objects["Armature"]
         bpy.data.objects["Armature"].select_set(True)
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         return {"FINISHED"}
+
+    def _removecollection(self, collection):
+        collections = bpy.data.collections
+        if collection in collections:
+            collections.remove(collections[collection])
+
+    def _createcollection(self, collection):
+        collections = bpy.data.collections
+        if collection not in collections:
+            bpy.context.scene.collection.children.link(
+                collections.new(collection))
 
 
 class MH2UE_OT_Bone(bpy.types.Operator):
@@ -258,10 +288,10 @@ class MH2UE_OT_UEeye(bpy.types.Operator):
         scale.x = dimensions.x / default_dimensions.x
         scale.y = dimensions.y / default_dimensions.y
         scale.z = dimensions.z / default_dimensions.z
+        bpy.context.view_layer.objects.active = bpy.data.objects[mh_eye_L]
         fbx.fbx_import(props.eye_s1, props.eye_f1)
-        bpy.context.view_layer.objects.active = bpy.data.objects[ue_eye_L]
-        index = bpy.data.collections.find("human") + 1
-        bpy.ops.object.move_to_collection(collection_index=index)
+        movetocollections("MESH", props.import_s2)
+        bpy.data.objects[ue_eye_L].select_set(True)
         bpy.ops.object.duplicate()
         loc_eye_l = bpy.data.objects[mh_eye_L].location\
             + mathutils.Vector((0, 0.3 * scale.y, 0))

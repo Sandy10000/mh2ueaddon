@@ -12,6 +12,8 @@ class MH2UE_Property(bpy.types.PropertyGroup):
     import_b5: bpy.props.BoolProperty(default=False)
     import_b6: bpy.props.BoolProperty(default=True)
     import_b7: bpy.props.BoolProperty(default=True)
+    import_s1: bpy.props.StringProperty(default="Rig")
+    import_s2: bpy.props.StringProperty(default="Mesh")
     bone_tw_ll: bpy.props.BoolProperty(default=True)
     bone_tw_ul: bpy.props.BoolProperty(default=True)
     bone_tw_lr: bpy.props.BoolProperty(default=True)

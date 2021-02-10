@@ -47,6 +47,15 @@ class MH2UE_PT_Import(MH2UE_PT, bpy.types.Panel):
             props,
             "import_b7",
             text="Change bone vector for Unreal Engine")
+        layout.label(text="Collections")
+        layout.prop(
+            props,
+            "import_s1",
+            text="armature")
+        layout.prop(
+            props,
+            "import_s2",
+            text="mesh")
         layout.operator(
             operators.MH2UE_OT_Import.bl_idname,
             text=bpy.app.translations.pgettext("Import"))

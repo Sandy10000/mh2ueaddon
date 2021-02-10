@@ -17,6 +17,9 @@ dic = {
         "アーマチュアオブジェクトの名前を「Armature」に変更",
     ("*", "Change bone vector for Unreal Engine"):
         "ボーンの方向をアンリアルエンジン用に変更",
+    ("*", "collections"): "",
+    ("*", "armature"): "アーマチュア",
+    ("*", "mesh"): "メッシュ",
     ("*", "Add bones"): "ボーン追加",
     ("*", "Use Unreal Engine eyes"): "アンリアルエンジンの目を使用",
     ("*", "File path"): "",
