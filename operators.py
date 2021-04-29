@@ -8,6 +8,9 @@ from . import mh2ueaddon
 from . import fbx
 
 
+objname = ""
+
+
 def movetocollections(object_type, collection):
     collections = bpy.data.collections
     for o in bpy.data.objects:
@@ -28,25 +31,29 @@ class MH2UE_OT_Import(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
+        global objname
         scene = context.scene
         props = scene.mh2ue_prop
         collections = bpy.data.collections
         if props.import_b1:
             bpy.ops.object.select_all(action='SELECT')
             bpy.ops.object.delete()
-            MH2UE_OT_Import._removecollection(self, "human")
+            MH2UE_OT_Import._removecollection(self, objname)
         if props.import_b2:
             scene.unit_settings.scale_length = 0.01
         if props.import_b3:
             scene.MhScaleMode = "CENTIMETER"
         if props.import_b4:
             bpy.ops.mh_community.import_body()
+            for o in bpy.data.objects:
+                if o.type == 'ARMATURE':
+                    objname = o.name
         if props.import_b5:
             bpy.context.view_layer.objects.active\
-                = bpy.data.objects["human.HighPolyEyes"]
+                = bpy.data.objects[objname + ".HighPolyEyes"]
             bpy.ops.mh_community.separate_eyes()
         if props.import_b6:
-            bpy.data.objects["human"].name = "Armature"
+            bpy.data.objects[objname].name = "Armature"
         if props.import_b7:
             mh2ueaddon.mh2ue()
         MH2UE_OT_Import._createcollection(self, props.import_s1)
@@ -275,10 +282,11 @@ class MH2UE_OT_UEeye(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
+        global objname
         bpy.ops.object.select_all(action='DESELECT')
         props = context.scene.mh2ue_prop
-        mh_eye_L = "human.HighPolyEyes_L"
-        mh_eye_R = "human.HighPolyEyes_R"
+        mh_eye_L = objname + ".HighPolyEyes_L"
+        mh_eye_R = objname + ".HighPolyEyes_R"
         ue_eye_L = "SKM_Eye_00"
         ue_eye_R = "SKM_Eye_00.001"
         default_dimensions = mathutils.Vector(
